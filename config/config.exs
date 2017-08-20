@@ -19,4 +19,6 @@ use Mix.Config
 
 # import_config "#{Mix.Project.config[:target]}.exs"
 
-config :nerves_dht_sample, pin: 2
+config :nerves_dht_sample,
+  pin: 2,
+  sensor: 22

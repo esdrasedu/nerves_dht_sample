@@ -1,13 +1,14 @@
 defmodule NervesDhtSample.LoggerDht do
-  use GenServer
+  use NervesDht
 
-  def start_link(state, opts \\ []) do
-    GenServer.start_link(__MODULE__, state, opts)
+  def listen({:ok, p, s, h, t}) do
+    IO.puts("Listen event on MyGenServer")
+    IO.puts("Pin: #{p}, Sensor: #{s}")
+    IO.puts("Temperature: #{t} Humidity: #{h}\n")
   end
 
-  def handle_cast({:ok, h, t}, state) do
+  def listen({:error, error}) do
     IO.puts("Listen event on MyGenServer")
-    IO.puts("Temperature: #{t} Humidity: #{h}\n")
-    {:noreply, state}
+    IO.puts("Error: #{error}\n")
   end
 end

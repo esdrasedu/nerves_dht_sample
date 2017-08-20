@@ -1,9 +1,17 @@
 ## Add custom options here
 
+## Distributed Erlang Options
+##  The cookie needs to be configured prior to vm boot for
+##  for read only filesystem.
+
+# -name nerves_dht_sample@0.0.0.0
+-setcookie hGWd36VyPQhSZivyHuRNYt2ewqm8sk0A2RHEd5C8ejeZUlm7zJHRheJ6PgvKxYfn
+
 ## Start the Elixir shell
+
 -noshell
 -user Elixir.IEx.CLI
--extra --no-halt
 
-## Options added here are interpreted as plain arguments and
+## Options added after -extra are interpreted as plain arguments and
 ## can be retrieved using :init.get_plain_arguments().
+-extra --no-halt

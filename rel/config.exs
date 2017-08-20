@@ -14,11 +14,11 @@ use Mix.Releases.Config,
 # and environment configuration is called a profile
 
 environment :dev do
-  set cookie: :"~E7C]x<8CD]/na4fa)0POKQEN*]82Z1&d.)Z|yuIs{fr35=$Y,>|`SRiA`n?^NaJ"
+  set cookie: :"?(@HtF2j}J<:1oT_/:1GUOVOx1UwkSN!%o.t<g@pZ{R>IXADIj!vZ/6}3<Lr[d@@"
 end
 
 environment :prod do
-  set cookie: :"~E7C]x<8CD]/na4fa)0POKQEN*]82Z1&d.)Z|yuIs{fr35=$Y,>|`SRiA`n?^NaJ"
+  set cookie: :"?(@HtF2j}J<:1oT_/:1GUOVOx1UwkSN!%o.t<g@pZ{R>IXADIj!vZ/6}3<Lr[d@@"
 end
 
 # You may define one or more releases in this file.
