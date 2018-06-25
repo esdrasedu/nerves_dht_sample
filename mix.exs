@@ -57,7 +57,7 @@ defmodule NervesDhtSample.Mixfile do
   def deps("host"), do: []
   def deps(target) do
     [ system(target),
-      {:nerves_dht, path: "/home/esdras/Projects/nerves_dht"},
+      {:nerves_dht, "~> 0.1"},
       {:nerves_runtime, "~> 0.5.0"}
     ]
   end
