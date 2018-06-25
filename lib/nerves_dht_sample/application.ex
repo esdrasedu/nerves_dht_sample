@@ -10,7 +10,7 @@ defmodule NervesDhtSample.Application do
     sensor = Application.get_env(:nerves_dht_sample, :sensor)
     # Define workers and child supervisors to be supervised
     children = [
-      worker(NervesDhtSample.LoggerDht, [pin, sensor]),
+      worker(NervesDhtSample.LoggerDht, [{pin, sensor}, [name: NervesDhtSample.LoggerDht]]),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

@@ -12,9 +12,9 @@ defmodule NervesDhtSample.Mixfile do
   def project do
     [app: :nerves_dht_sample,
      version: "0.1.0",
-     elixir: "~> 1.5.0",
+     elixir: "> 1.5.0",
      target: @target,
-     archives: [nerves_bootstrap: "~> 0.6.0"],
+     archives: [nerves_bootstrap: "~> 1.0.1"],
      deps_path: "deps/#{@target}",
      build_path: "_build/#{@target}",
      lockfile: "mix.lock.#{@target}",
@@ -48,22 +48,20 @@ defmodule NervesDhtSample.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   def deps do
-    [{:nerves, "~> 0.7.0", runtime: false}] ++
-    deps(@target)
+    [
+      {:nerves, "~> 0.7.5", runtime: false},
+    ] ++ deps(@target)
   end
 
   # Specify target specific dependencies
-  def deps("host"), do: [
-    {:nerves_dht, path: "/home/esdras/Projects/nerves_dht"},
-  ]
+  def deps("host"), do: []
   def deps(target) do
     [ system(target),
       {:nerves_dht, path: "/home/esdras/Projects/nerves_dht"},
-      {:nerves_runtime, "~> 0.4.0"}
+      {:nerves_runtime, "~> 0.5.0"}
     ]
   end
 
-  
   def system("rpi"), do: {:nerves_system_rpi, ">= 0.0.0", runtime: false}
   def system("rpi0"), do: {:nerves_system_rpi0, ">= 0.0.0", runtime: false}
   def system("rpi2"), do: {:nerves_system_rpi2, ">= 0.0.0", runtime: false}
