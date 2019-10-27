@@ -1,82 +1,51 @@
 defmodule NervesDhtSample.Mixfile do
   use Mix.Project
 
-  @target System.get_env("MIX_TARGET") || "host"
-
-  Mix.shell.info([:green, """
-  Mix environment
-    MIX_TARGET:   #{@target}
-    MIX_ENV:      #{Mix.env}
-  """, :reset])
+  @all_targets [:rpi, :rpi0, :rpi2, :rpi3, :rpi3a, :bbb, :x86_64]
 
   def project do
     [app: :nerves_dht_sample,
      version: "0.1.0",
      elixir: "> 1.5.0",
-     target: @target,
-     archives: [nerves_bootstrap: "~> 1.0.1"],
-     deps_path: "deps/#{@target}",
-     build_path: "_build/#{@target}",
-     lockfile: "mix.lock.#{@target}",
+     archives: [nerves_bootstrap: "~> 1.6"],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     aliases: aliases(@target),
+     aliases: [loadconfig: [&bootstrap/1]],
      deps: deps()]
   end
 
-  # Configuration for the OTP application.
-  #
-  # Type `mix help compile.app` for more information.
-  def application, do: application(@target)
-
-  # Specify target specific application configurations
-  # It is common that the application start function will start and supervise
-  # applications which could cause the host to fail. Because of this, we only
-  # invoke NervesDhtSample.start/2 when running on a target.
-  def application(_target) do
-    [mod: {NervesDhtSample.Application, []},
-     extra_applications: [:logger]]
+  def bootstrap(args) do
+    Application.start(:nerves_bootstrap)
+    Mix.Task.run("loadconfig", args)
   end
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:my_dep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:my_dep, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
-  #
-  # Type "mix help deps" for more examples and options
+  def application do
+    [mod: {NervesDhtSample.Application, []},
+     extra_applications: [:logger, :runtime_tools]]
+  end
+
   def deps do
     [
-      {:nerves, "~> 0.7.5", runtime: false},
-    ] ++ deps(@target)
-  end
+      {:nerves, "~> 1.5", runtime: false},
+      {:shoehorn, "~> 0.6"},
+      {:ring_logger, "~> 0.8"},
+      {:toolshed, "~> 0.2"},
 
-  # Specify target specific dependencies
-  def deps("host"), do: []
-  def deps(target) do
-    [ system(target),
+      # Dependencies for all targets except :host
+      {:nerves_runtime, "~> 0.10", targets: @all_targets},
+      {:nerves_init_gadget, "~> 0.7", targets: @all_targets},
+
+      # Targets
+      {:nerves_system_rpi, "~> 1.8", runtime: false, targets: :rpi},
+      {:nerves_system_rpi0, "~> 1.8", runtime: false, targets: :rpi0},
+      {:nerves_system_rpi2, "~> 1.8", runtime: false, targets: :rpi2},
+      {:nerves_system_rpi3, "~> 1.8", runtime: false, targets: :rpi3},
+      {:nerves_system_rpi3a, "~> 1.8", runtime: false, targets: :rpi3a},
+      {:nerves_system_bbb, "~> 2.3", runtime: false, targets: :bbb},
+      {:nerves_system_x86_64, "~> 1.8", runtime: false, targets: :x86_64},
+
       {:nerves_dht, "~> 0.1"},
-      {:nerves_runtime, "~> 0.5.0"}
     ]
-  end
-
-  def system("rpi"), do: {:nerves_system_rpi, ">= 0.0.0", runtime: false}
-  def system("rpi0"), do: {:nerves_system_rpi0, ">= 0.0.0", runtime: false}
-  def system("rpi2"), do: {:nerves_system_rpi2, ">= 0.0.0", runtime: false}
-  def system("rpi3"), do: {:nerves_system_rpi3, ">= 0.0.0", runtime: false}
-  def system("bbb"), do: {:nerves_system_bbb, ">= 0.0.0", runtime: false}
-  def system("linkit"), do: {:nerves_system_linkit, ">= 0.0.0", runtime: false}
-  def system("ev3"), do: {:nerves_system_ev3, ">= 0.0.0", runtime: false}
-  def system("qemu_arm"), do: {:nerves_system_qemu_arm, ">= 0.0.0", runtime: false}
-  def system(target), do: Mix.raise "Unknown MIX_TARGET: #{target}"
-
-  # We do not invoke the Nerves Env when running on the Host
-  def aliases("host"), do: []
-  def aliases(_target) do
-    ["deps.precompile": ["nerves.precompile", "deps.precompile"],
-     "deps.loadpaths":  ["deps.loadpaths", "nerves.loadpaths"]]
   end
 
 end
